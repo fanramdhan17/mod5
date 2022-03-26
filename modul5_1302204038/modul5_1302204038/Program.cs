@@ -12,10 +12,20 @@ namespace modul5_1302204038
     { 
         static void Main(String[] args)
         {
-            SayaTubeVideo video = new SayaTubeVideo("Tutorial Design By Contract – Fan");
-            video.PrintVideoDetails();
-            video.IncreasePlayCount(1);
-            video.PrintVideoDetails();
+            SayaTubeVideo test = new(null);
+            test.printVideoDetails();
+
+            SayaTubeVideo baru = new("Cara Mendownload RAM");
+            baru.printVideoDetails();
+
+            SayaTubeVideo saya = new("Tutorial Design By Contract – Fan");
+            saya.printVideoDetails();
+
+            for (int i = 0; i < 4; i++)
+            {
+                saya.increasePlayCount(123456789);
+            }
+            saya.printVideoDetails();
         }
     }
 
@@ -27,6 +37,8 @@ namespace modul5_1302204038
 
         public SayaTubeVideo(String judul)
         {
+            Contract.Requires(title != null);
+            Contract.Requires(title.Length < 200);
             Random ids = new Random();
             this.title = judul;
             id = ids.Next(0, 100000);
@@ -35,7 +47,25 @@ namespace modul5_1302204038
 
         public void IncreasePlayCount(int i)
         {
-            playCount = playCount + i;
+            try
+            {
+                if (i >= 10000000) throw new Exception("Melebihi limit angka");
+                playCount = playCount + i;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public int GetPlaycount()
+        {
+            return playCount;
+        }
+
+        public string GetTitle()
+        {
+            return title;
         }
 
         public void PrintVideoDetails()
@@ -43,16 +73,6 @@ namespace modul5_1302204038
             Console.WriteLine("id :"+id);
             Console.WriteLine("judul :"+title);
             Console.WriteLine("playCount :"+playCount);
-        }
-
-        internal int getPlayCount()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal int GetTitle()
-        {
-            throw new NotImplementedException();
         }
     }
 
@@ -76,7 +96,7 @@ namespace modul5_1302204038
             int total = 0;
             foreach (SayaTubeVideo video in this.uploadedVideos)
             {
-                total += video.getPlayCount();
+                total += video.GetPlaycount();
             }
             return total;
         }
